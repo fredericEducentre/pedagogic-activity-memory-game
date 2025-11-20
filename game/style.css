@@ -52,6 +52,13 @@ body {
     justify-items: center;
 }
 
+.memory-grid.locked {
+    background-color: transparent;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
 .memory-card {
     width: 160px;
     height: 160px;
