@@ -15,10 +15,14 @@ body {
 }
 
 .game-title {
-    color: #8e44ff;
-    font-weight: 500;
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #8e44ff, #ff6cab);
+    background-clip: text;
+    color: transparent;
     margin-bottom: 10px;
-}
+    text-align: center;
+  }
 
 .info-card {
     border-radius: 16px;
