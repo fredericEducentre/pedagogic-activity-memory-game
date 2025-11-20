@@ -28,6 +28,12 @@
       </div>
     </div>
 
+    <div class="text-center mt-3">
+      <button id="replayButton" class="btn btn-outline-primary btn-new-game" style="display: none;">
+        Rejouer
+      </button>
+    </div>
+
     <div class="memory-grid mt-4"></div>
   </div>
 
@@ -39,6 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const scoreElement = document.getElementById("score");
   const movesElement = document.getElementById("moves");
+  const replayButton = document.getElementById("replayButton");
+  let gameImages = [];
 
   let firstCard = null;
   let secondCard = null;
@@ -72,12 +80,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (matchedPairs === totalPairs) {
       setTimeout(() => {
         alert(`Bravo ! Tu as trouvé toutes les paires en ${moves} coups 🎉`);
+        replayButton.style.display = "inline-block";
       }, 300);
     }
   }
 
   function handleCardClick(e) {
     const card = e.currentTarget;
+    if (lockBoard) return;
     if (card.classList.contains("is-flipped")) return;
 
     card.classList.add("is-flipped");
@@ -116,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildGame(images) {
+    replayButton.style.display = "none";
     grid.innerHTML = "";
     firstCard = null;
     secondCard = null;
@@ -171,10 +182,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!response.ok) throw new Error("Réponse réseau non OK");
       return response.json();
     })
-    .then((images) => buildGame(images))
+    .then((images) => {
+      gameImages = images;
+      buildGame(images);
+    })
     .catch((error) => {
       console.error("Erreur JSON, fallback :", error);
     });
+
+  replayButton.addEventListener("click", () => {
+    if (gameImages.length > 0) {
+      buildGame(gameImages);
+    }
+  });
 });
 </script>
 </body>
