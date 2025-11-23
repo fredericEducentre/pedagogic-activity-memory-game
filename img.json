@@ -1,26 +1,50 @@
 [
-  { "id": 1,
-    "img": "https://cdn.leonardo.ai/users/fe0eef91-674f-4adb-aa53-0b1c831c4fe8/generations/0bdcc917-fdf0-4a23-a23f-8293d0d750d8/segments/1:4:1/Lucid_Origin_Generate_a_colorful_illustration_of_a_lion_with_a_0.jpg"
+  {
+    "id": 1,
+    "img": "https://cdn.leonardo.ai/users/fe0eef91-674f-4adb-aa53-0b1c831c4fe8/generations/0bdcc917-fdf0-4a23-a23f-8293d0d750d8/segments/1:4:1/Lucid_Origin_Generate_a_colorful_illustration_of_a_lion_with_a_0.jpg",
+    "question": "Quel animal est représenté ?",
+    "answer": "Le lion"
   },
-  { "id": 2,
-    "img": "https://cdn.leonardo.ai/users/ac42858e-a860-4a24-a8f9-643b3f840da8/generations/9cf340f6-10e9-42db-832d-95a7c950faae/segments/4:4:1/Lucid_Origin_create_a_vibrant_and_whimsical_image_of_a_large_e_3.jpg"
+  {
+    "id": 2,
+    "img": "https://cdn.leonardo.ai/users/ac42858e-a860-4a24-a8f9-643b3f840da8/generations/9cf340f6-10e9-42db-832d-95a7c950faae/segments/4:4:1/Lucid_Origin_create_a_vibrant_and_whimsical_image_of_a_large_e_3.jpg",
+    "question": "Quel animal est représenté ?",
+    "answer": "L’éléphant"
   },
-  { "id": 3,
-    "img": "https://cdn.leonardo.ai/users/ac42858e-a860-4a24-a8f9-643b3f840da8/generations/ec82a4dc-8129-41b7-9db2-9f6b931e77af/segments/1:4:1/Lucid_Origin_create_an_image_of_a_smiling_dolphin_with_a_round_0.jpg"
+  {
+    "id": 3,
+    "img": "https://cdn.leonardo.ai/users/ac42858e-a860-4a24-a8f9-643b3f840da8/generations/ec82a4dc-8129-41b7-9db2-9f6b931e77af/segments/1:4:1/Lucid_Origin_create_an_image_of_a_smiling_dolphin_with_a_round_0.jpg",
+    "question": "Quel animal vit dans l’océan ?",
+    "answer": "Le dauphin"
   },
-  { "id": 4,
-    "img": "https://cdn.leonardo.ai/users/ac42858e-a860-4a24-a8f9-643b3f840da8/generations/5fcd4d0b-d89c-45b5-98e0-85ecf7d54a68/segments/1:4:1/Lucid_Origin_create_a_colorful_cartoon_image_of_a_giraffe_with_0.jpg"
+  {
+    "id": 4,
+    "img": "https://cdn.leonardo.ai/users/ac42858e-a860-4a24-a8f9-643b3f840da8/generations/5fcd4d0b-d89c-45b5-98e0-85ecf7d54a68/segments/1:4:1/Lucid_Origin_create_a_colorful_cartoon_image_of_a_giraffe_with_0.jpg",
+    "question": "Quel animal a un très long cou ?",
+    "answer": "La girafe"
   },
-  { "id": 5,
-    "img": "https://cdn.leonardo.ai/users/cbccf811-8816-4aa6-8450-2572c43116b5/generations/4be7b72d-9eaf-4784-8a75-f2e4c4f21ef5/segments/2:4:1/Lucid_Origin_create_an_image_of_a_happy_monkey_with_bright_bro_1.jpg"
+  {
+    "id": 5,
+    "img": "https://cdn.leonardo.ai/users/cbccf811-8816-4aa6-8450-2572c43116b5/generations/4be7b72d-9eaf-4784-8a75-f2e4c4f21ef5/segments/2:4:1/Lucid_Origin_create_an_image_of_a_happy_monkey_with_bright_bro_1.jpg",
+    "question": "Quel animal adore grimper aux arbres ?",
+    "answer": "Le singe"
   },
-  { "id": 6,
-    "img": "https://cdn.leonardo.ai/users/cbccf811-8816-4aa6-8450-2572c43116b5/generations/37c92019-30fc-4974-8e2e-6146dace160a/segments/2:4:1/Lucid_Origin_create_an_image_of_a_vibrant_orange_and_black_tig_1.jpg"
+  {
+    "id": 6,
+    "img": "https://cdn.leonardo.ai/users/cbccf811-8816-4aa6-8450-2572c43116b5/generations/37c92019-30fc-4974-8e2e-6146dace160a/segments/2:4:1/Lucid_Origin_create_an_image_of_a_vibrant_orange_and_black_tig_1.jpg",
+    "question": "Quel grand félin possède des rayures noires ?",
+    "answer": "Le tigre"
   },
-  { "id": 7,
-    "img": "https://cdn.leonardo.ai/users/f13de5f4-092a-49e4-bc20-66cb1439a627/generations/2c1c3d10-d87e-495c-b983-581593cab5ea/segments/3:4:1/Lucid_Origin_create_an_image_of_a_friendly_rhinoceros_with_a_r_2.jpg"
+  {
+    "id": 7,
+    "img": "https://cdn.leonardo.ai/users/f13de5f4-092a-49e4-bc20-66cb1439a627/generations/2c1c3d10-d87e-495c-b983-581593cab5ea/segments/3:4:1/Lucid_Origin_create_an_image_of_a_friendly_rhinoceros_with_a_r_2.jpg",
+    "question": "Quel animal possède une grande corne ?",
+    "answer": "Le rhinocéros"
   },
-  { "id": 8,
-    "img": "https://cdn.leonardo.ai/users/f13de5f4-092a-49e4-bc20-66cb1439a627/generations/6729dcbf-9a9a-4f71-8ec9-4d1a21a497f3/segments/3:4:1/Lucid_Origin_create_a_vibrant_and_playful_cartoon_image_of_a_s_2.jpg"
+  {
+    "id": 8,
+    "img": "https://cdn.leonardo.ai/users/f13de5f4-092a-49e4-bc20-66cb1439a627/generations/6729dcbf-9a9a-4f71-8ec9-4d1a21a497f3/segments/3:4:1/Lucid_Origin_create_a_vibrant_and_playful_cartoon_image_of_a_s_2.jpg",
+    "question": "Quel reptile rampe au sol ?",
+    "answer": "Le serpent"
   }
 ]

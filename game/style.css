@@ -107,6 +107,7 @@ body {
 .memory-back {
     transform: rotateY(180deg);
     background: #ffffff;
+    position: relative;
 }
 
 .memory-back img {
@@ -168,6 +169,29 @@ body {
   font-size: 16px;
   margin-bottom: 20px;
 }
+
+.qa-box {
+  margin-top: 8px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.qa-only {
+    /* padding: 15px; */
+    font-size: 16px;
+    color: #FFF;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    height: 100%;
+    width: 100%;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 @keyframes popIn {
   from {
