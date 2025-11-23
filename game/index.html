@@ -50,6 +50,7 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  // DOM elements
   const grid = document.querySelector(".memory-grid");
   const backImageUrl =
     "https://cdn.leonardo.ai/users/fe0eef91-674f-4adb-aa53-0b1c831c4fe8/generations/f1024fa8-645a-44c4-a300-7af2205d5c89/segments/4:4:1/Lucid_Origin_I_need_a_simple_image_for_the_back_of_my_cards_16_3.jpg";
@@ -57,8 +58,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const scoreElement = document.getElementById("score");
   const movesElement = document.getElementById("moves");
   const replayButton = document.getElementById("replayButton");
-  let gameImages = [];
 
+  // Win screen elements
+  const winScreen = document.getElementById("winScreen");
+  const finalScore = document.getElementById("finalScore");
+  const finalMoves = document.getElementById("finalMoves");
+  const winReplayButton = document.getElementById("winReplayButton");
+
+  // Game state
+  let gameImages = [];
   let firstCard = null;
   let secondCard = null;
   let lockBoard = false;
@@ -87,22 +95,39 @@ document.addEventListener("DOMContentLoaded", () => {
     grid.classList.remove("locked");
   }
 
+  // 🔥 Envoi des résultats vers Educentre (si disponible)
+  function sendResultToEducente(result) {
+    // 1) Callback direct (le plus propre)
+    if (typeof window.onMemoryGameEnd === "function") {
+      window.onMemoryGameEnd(result);
+    }
+
+    // 2) Mode inter-iframe (si le jeu est embarqué)
+    window.parent.postMessage(
+      { type: "memoryResult", payload: result },
+      "*"
+    );
+  }
+
   function checkWin() {
     if (matchedPairs === totalPairs) {
       setTimeout(() => {
-        //alert(`Bravo ! Tu as trouvé toutes les paires en ${moves} coups 🎉`);
-        //replayButton.style.display = "inline-block";
-        document.getElementById("finalScore").textContent = score;
-        document.getElementById("finalMoves").textContent = moves;
+        const result = {
+          score,
+          moves,
+          matchedPairs,
+          totalPairs,
+          timestamp: Date.now()
+        };
 
-        document.getElementById("winScreen").style.display = "flex";
+        // Mettre à jour l’écran de victoire
+        finalScore.textContent = score;
+        finalMoves.textContent = moves;
+        winScreen.style.display = "flex";
 
-        document.getElementById("winReplayButton").addEventListener("click", () => {
-          document.getElementById("winScreen").style.display = "none";
-          if (gameImages.length > 0) {
-            buildGame(gameImages);
-          }
-        });
+        // 🔥 Envoi des résultats API Educentre (optionnel + sûr)
+        sendResultToEducente(result);
+
       }, 300);
     }
   }
@@ -147,6 +172,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // 🔥 Fonction exposée pour Educentre
+  window.startMemoryGame = function(images) {
+    gameImages = images;
+    buildGame(images);
+  };
+
   function buildGame(images) {
     replayButton.style.display = "none";
     grid.innerHTML = "";
@@ -179,14 +210,12 @@ document.addEventListener("DOMContentLoaded", () => {
       front.className = "memory-face memory-front";
       const frontImg = document.createElement("img");
       frontImg.src = backImageUrl;
-      frontImg.alt = "Dos de carte";
       front.appendChild(frontImg);
 
       const back = document.createElement("div");
       back.className = "memory-face memory-back";
       const backImg = document.createElement("img");
       backImg.src = cardData.img;
-      backImg.alt = String(cardData.id);
       back.appendChild(backImg);
 
       inner.appendChild(front);
@@ -194,16 +223,13 @@ document.addEventListener("DOMContentLoaded", () => {
       card.appendChild(inner);
 
       card.addEventListener("click", handleCardClick);
-
       grid.appendChild(card);
     });
   }
 
+  // 🔥 Mode standard (sans Educentre) → charger img.json
   fetch("../img.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Réponse réseau non OK");
-      return response.json();
-    })
+    .then((response) => response.json())
     .then((images) => {
       gameImages = images;
       buildGame(images);
@@ -212,12 +238,17 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Erreur JSON, fallback :", error);
     });
 
+  // Replay écran basique
   replayButton.addEventListener("click", () => {
-    if (gameImages.length > 0) {
-      buildGame(gameImages);
-    }
+    buildGame(gameImages);
+  });
+
+  winReplayButton.addEventListener("click", () => {
+    winScreen.style.display = "none";
+    buildGame(gameImages);
   });
 });
 </script>
+
 </body>
 </html>
