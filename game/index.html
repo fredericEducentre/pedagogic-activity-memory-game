@@ -36,6 +36,17 @@
 
     <div class="memory-grid mt-4"></div>
   </div>
+  <div id="winScreen" class="win-screen" style="display: none;">
+    <div class="win-box">
+      <h2 class="win-title">Bravo ! 🎉</h2>
+      <p class="win-text">Tu as trouvé toutes les paires !</p>
+      <p class="win-stats">
+        Score : <span id="finalScore"></span><br>
+        Coups : <span id="finalMoves"></span>
+      </p>
+      <button id="winReplayButton" class="btn btn-primary mt-3">Rejouer</button>
+    </div>
+  </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -79,8 +90,19 @@ document.addEventListener("DOMContentLoaded", () => {
   function checkWin() {
     if (matchedPairs === totalPairs) {
       setTimeout(() => {
-        alert(`Bravo ! Tu as trouvé toutes les paires en ${moves} coups 🎉`);
-        replayButton.style.display = "inline-block";
+        //alert(`Bravo ! Tu as trouvé toutes les paires en ${moves} coups 🎉`);
+        //replayButton.style.display = "inline-block";
+        document.getElementById("finalScore").textContent = score;
+        document.getElementById("finalMoves").textContent = moves;
+
+        document.getElementById("winScreen").style.display = "flex";
+
+        document.getElementById("winReplayButton").addEventListener("click", () => {
+          document.getElementById("winScreen").style.display = "none";
+          if (gameImages.length > 0) {
+            buildGame(gameImages);
+          }
+        });
       }, 300);
     }
   }
