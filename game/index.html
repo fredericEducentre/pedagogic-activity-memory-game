@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <title>Jeu de Memory</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="memory-wrapper mx-auto">
+
     <!-- Titre -->
     <div class="text-center mb-3">
       <h2 class="game-title">Memory Educentre</h2>
     </div>
 
-    <!-- Score + Coups + bouton -->
+    <!-- Score + Coups -->
     <div class="d-flex justify-content-center align-items-center gap-2">
       <div class="card info-card text-center">
         <div class="info-label">Score</div>
@@ -29,14 +28,16 @@
     </div>
 
     <div class="text-center mt-3">
-      <button id="replayButton" class="btn btn-outline-primary btn-new-game" style="display: none;">
+      <button id="replayButton" class="btn btn-outline-primary btn-new-game" style="display:none;">
         Rejouer
       </button>
     </div>
 
     <div class="memory-grid mt-4"></div>
   </div>
-  <div id="winScreen" class="win-screen" style="display: none;">
+
+  <!-- Écran de victoire -->
+  <div id="winScreen" class="win-screen" style="display:none;">
     <div class="win-box">
       <h2 class="win-title">Bravo ! 🎉</h2>
       <p class="win-text">Tu as trouvé toutes les paires !</p>
@@ -48,176 +49,290 @@
     </div>
   </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const grid = document.querySelector(".memory-grid");
-  const backImageUrl =
-    "https://cdn.leonardo.ai/users/fe0eef91-674f-4adb-aa53-0b1c831c4fe8/generations/f1024fa8-645a-44c4-a300-7af2205d5c89/segments/4:4:1/Lucid_Origin_I_need_a_simple_image_for_the_back_of_my_cards_16_3.jpg";
+  <!-- Bridge Educentre -->
+  <script src="https://cdn.jsdelivr.net/gh/educentre-integration/libraries@latest/activity/bridge.min.js"></script>
 
-  const scoreElement = document.getElementById("score");
-  const movesElement = document.getElementById("moves");
-  const replayButton = document.getElementById("replayButton");
-  let gameImages = [];
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
 
-  let firstCard = null;
-  let secondCard = null;
-  let lockBoard = false;
-  let moves = 0;
-  let score = 0;
-  let matchedPairs = 0;
-  let totalPairs = 0;
+    /* =====================================================================================
+       VARIABLES GLOBALES
+    ====================================================================================== */
 
-  function updateText() {
-    scoreElement.textContent = score;
-    movesElement.textContent = moves;
-  }
+    let edac = null;
+    let isEducenteActive = false;
 
-  function randomPlaceImg(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+    try {
+      edac = new EducentreActivity();
+      isEducenteActive = true;
+      console.log("Educentre détecté ✔");
+    } catch(e) {
+      console.warn("Educentre non détecté — mode standalone.");
     }
-    return array;
-  }
 
-  function resetBoardSelection() {
-    firstCard = null;
-    secondCard = null;
-    lockBoard = false;
-    grid.classList.remove("locked");
-  }
+    const grid = document.querySelector(".memory-grid");
+    const backImageUrl =
+      "https://cdn.leonardo.ai/users/fe0eef91-674f-4adb-aa53-0b1c831c4fe8/generations/f1024fa8-645a-44c4-a300-7af2205d5c89/segments/4:4:1/Lucid_Origin_I_need_a_simple_image_for_the_back_of_my_cards_16_3.jpg";
 
-  function checkWin() {
-    if (matchedPairs === totalPairs) {
-      setTimeout(() => {
-        //alert(`Bravo ! Tu as trouvé toutes les paires en ${moves} coups 🎉`);
-        //replayButton.style.display = "inline-block";
-        document.getElementById("finalScore").textContent = score;
-        document.getElementById("finalMoves").textContent = moves;
+    const scoreElement = document.getElementById("score");
+    const movesElement = document.getElementById("moves");
+    const replayButton = document.getElementById("replayButton");
 
-        document.getElementById("winScreen").style.display = "flex";
+    let gameImages = [];
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let moves = 0;
+    let score = 0;
+    let matchedPairs = 0;
+    let totalPairs = 0;
 
-        document.getElementById("winReplayButton").addEventListener("click", () => {
-          document.getElementById("winScreen").style.display = "none";
-          if (gameImages.length > 0) {
+
+    /* =====================================================================================
+       FONCTIONS UTILITAIRES
+    ====================================================================================== */
+
+    function updateText() {
+      scoreElement.textContent = score;
+      movesElement.textContent = moves;
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function resetBoardSelection() {
+      firstCard = null;
+      secondCard = null;
+      lockBoard = false;
+      grid.classList.remove("locked");
+    }
+
+
+    /* =====================================================================================
+       FIN DE PARTIE + ENVOI SCORE EDUCENTRE
+    ====================================================================================== */
+
+    function sendFinalScore() {
+      if (!isEducenteActive) return;
+
+      const normalizedScore = matchedPairs / totalPairs;
+      edac.sendScore(normalizedScore);
+      console.log("Score envoyé à Educentre :", normalizedScore);
+    }
+
+    function checkWin() {
+      if (matchedPairs === totalPairs) {
+        setTimeout(() => {
+
+          document.getElementById("finalScore").textContent = score;
+          document.getElementById("finalMoves").textContent = moves;
+
+          document.getElementById("winScreen").style.display = "flex";
+
+          sendFinalScore();
+
+          document.getElementById("winReplayButton").onclick = () => {
+            document.getElementById("winScreen").style.display = "none";
             buildGame(gameImages);
-          }
-        });
-      }, 300);
-    }
-  }
+          };
 
-  function handleCardClick(e) {
-    const card = e.currentTarget;
-    if (lockBoard) return;
-    if (card.classList.contains("is-flipped")) return;
-
-    card.classList.add("is-flipped");
-
-    if (!firstCard) {
-      firstCard = card;
-      return;
+        }, 300);
+      }
     }
 
-    secondCard = card;
-    lockBoard = true;
-    grid.classList.add("locked");
-    moves++;
-    updateText();
 
-    const firstId = firstCard.dataset.id;
-    const secondId = secondCard.dataset.id;
+    /* =====================================================================================
+       LOGIQUE DE CLIQUE
+    ====================================================================================== */
 
-    if (firstId === secondId) {
-      score += 10;
-      matchedPairs++;
+    function handleCardClick(e) {
+      const card = e.currentTarget;
+      if (lockBoard) return;
+      if (card.classList.contains("is-flipped")) return;
 
-      firstCard.removeEventListener("click", handleCardClick);
-      secondCard.removeEventListener("click", handleCardClick);
+      card.classList.add("is-flipped");
 
+      if (!firstCard) {
+        firstCard = card;
+        return;
+      }
+
+      secondCard = card;
+      lockBoard = true;
+      grid.classList.add("locked");
+      moves++;
       updateText();
-      resetBoardSelection();
-      checkWin();
-    } else {
-      setTimeout(() => {
-        firstCard.classList.remove("is-flipped");
-        secondCard.classList.remove("is-flipped");
+
+      if (firstCard.dataset.group === secondCard.dataset.group) {
+        score += 10;
+        matchedPairs++;
+
+        firstCard.removeEventListener("click", handleCardClick);
+        secondCard.removeEventListener("click", handleCardClick);
+
+        updateText();
         resetBoardSelection();
-      }, 800);
+        checkWin();
+      } else {
+        setTimeout(() => {
+          firstCard.classList.remove("is-flipped");
+          secondCard.classList.remove("is-flipped");
+          resetBoardSelection();
+        }, 800);
+      }
     }
-  }
 
-  function buildGame(images) {
-    replayButton.style.display = "none";
-    grid.innerHTML = "";
-    firstCard = null;
-    secondCard = null;
-    lockBoard = false;
-    moves = 0;
-    score = 0;
-    matchedPairs = 0;
-    totalPairs = images.length;
-    updateText();
 
-    const allCards = [];
-    images.forEach((item) => {
-      allCards.push({ ...item });
-      allCards.push({ ...item });
-    });
+    /* =====================================================================================
+       BUILDGAME (Cas1, Cas2, Cas3)
+    ====================================================================================== */
 
-    randomPlaceImg(allCards);
+    function buildGame(images) {
 
-    allCards.forEach((cardData) => {
-      const card = document.createElement("div");
-      card.className = "memory-card";
-      card.dataset.id = cardData.id;
+      replayButton.style.display = "none";
+      grid.innerHTML = "";
+      firstCard = null;
+      secondCard = null;
+      lockBoard = false;
+      moves = 0;
+      score = 0;
+      matchedPairs = 0;
+      totalPairs = images.length;
+      updateText();
 
-      const inner = document.createElement("div");
-      inner.className = "memory-card-inner";
+      const allCards = [];
 
-      const front = document.createElement("div");
-      front.className = "memory-face memory-front";
-      const frontImg = document.createElement("img");
-      frontImg.src = backImageUrl;
-      frontImg.alt = "Dos de carte";
-      front.appendChild(frontImg);
+      images.forEach(item => {
 
-      const back = document.createElement("div");
-      back.className = "memory-face memory-back";
-      const backImg = document.createElement("img");
-      backImg.src = cardData.img;
-      backImg.alt = String(cardData.id);
-      back.appendChild(backImg);
+        /* CAS 1 = Image + Question ⟷ Image + Réponse */
+        if (item.img && item.question && item.answer) {
+          allCards.push({id: item.id, group: item.id, img: item.img, text: item.question, type: "img_question"});
+          allCards.push({id: item.id, group: item.id, img: item.img, text: item.answer, type: "img_answer"});
+        }
 
-      inner.appendChild(front);
-      inner.appendChild(back);
-      card.appendChild(inner);
+        /* CAS 2 = Image ⟷ Image */
+        else if (item.img) {
+          allCards.push({id: item.id, group: item.id, img: item.img, type: "img_only"});
+          allCards.push({id: item.id, group: item.id, img: item.img, type: "img_only"});
+        }
 
-      card.addEventListener("click", handleCardClick);
+        /* CAS 3 = Question ⟷ Réponse */
+        else if (item.question && item.answer) {
+          allCards.push({id: item.id, group: item.id, text: item.question, type: "question_only"});
+          allCards.push({id: item.id, group: item.id, text: item.answer, type: "answer_only"});
+        }
+      });
 
-      grid.appendChild(card);
-    });
-  }
+      shuffle(allCards);
 
-  fetch("../img.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Réponse réseau non OK");
-      return response.json();
-    })
-    .then((images) => {
+      /* Création des cartes */
+      allCards.forEach(data => {
+        const card = document.createElement("div");
+        card.className = "memory-card";
+        card.dataset.group = data.group;
+
+        const inner = document.createElement("div");
+        inner.className = "memory-card-inner";
+
+        /* Recto */
+        const front = document.createElement("div");
+        front.className = "memory-face memory-front";
+        const frontImg = document.createElement("img");
+        frontImg.src = backImageUrl;
+        front.appendChild(frontImg);
+
+        /* Verso */
+        const back = document.createElement("div");
+        back.className = "memory-face memory-back";
+
+        if (data.type === "img_only") {
+          const img = document.createElement("img");
+          img.src = data.img;
+          back.appendChild(img);
+        }
+
+        if (data.type === "img_question" || data.type === "img_answer") {
+          const img = document.createElement("img");
+          img.src = data.img;
+
+          const text = document.createElement("div");
+          text.className = "qa-only";
+          text.innerHTML = data.type === "img_question" 
+            ? `<strong>${data.text}</strong>` 
+            : `<em>${data.text}</em>`;
+
+          back.appendChild(img);
+          back.appendChild(text);
+        }
+
+        if (data.type === "question_only" || data.type === "answer_only") {
+          const text = document.createElement("div");
+          text.className = "qa-only";
+          text.innerHTML = data.type === "question_only"
+            ? `<strong>${data.text}</strong>`
+            : `<em>${data.text}</em>`;
+          back.appendChild(text);
+        }
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+
+        card.addEventListener("click", handleCardClick);
+        grid.appendChild(card);
+      });
+    }
+
+
+    /* =====================================================================================
+       CHARGEMENT AUTOMATIQUE (Educentre ou local)
+    ====================================================================================== */
+
+    function startFromJSON(images) {
       gameImages = images;
       buildGame(images);
-    })
-    .catch((error) => {
-      console.error("Erreur JSON, fallback :", error);
-    });
-
-  replayButton.addEventListener("click", () => {
-    if (gameImages.length > 0) {
-      buildGame(gameImages);
     }
+
+    if (isEducenteActive) {
+
+      edac.getStorage((resp) => {
+        if (resp && resp.certificationStorage) {
+          console.log("Dataset Educentre (storage) chargé ✔");
+          startFromJSON(resp.certificationStorage);
+        } else {
+          console.warn("Aucun storage présent → fallback configuration");
+
+          edac.getConfiguration((config) => {
+            if (config) {
+              console.log("Configuration Educentre chargée ✔");
+              startFromJSON(config);
+            } else {
+              console.warn("Aucune configuration → fallback local");
+              fetch("./img.json")
+                .then(res => res.json())
+                .then(json => startFromJSON(json));
+            }
+          });
+        }
+      });
+
+    } else {
+      /* MODE AUTONOME */
+      fetch("./img.json")
+        .then(res => res.json())
+        .then(json => startFromJSON(json));
+    }
+
+
+    replayButton.onclick = () => buildGame(gameImages);
+
   });
-});
-</script>
+  </script>
+
 </body>
 </html>
