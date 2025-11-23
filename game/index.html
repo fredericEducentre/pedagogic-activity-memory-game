@@ -121,9 +121,15 @@
       if (!isEducenteActive) return;
 
       const normalizedScore = matchedPairs / totalPairs;
-      edac.sendScore(normalizedScore);
+
+      // sendScore nécessite OBLIGATOIREMENT un callback :
+      edac.sendScore(normalizedScore, (resp) => {
+        console.log("Réponse Educentre (score) :", resp);
+      });
+
       console.log("Score envoyé à Educentre :", normalizedScore);
     }
+
 
     function checkWin() {
       if (matchedPairs === totalPairs) {
