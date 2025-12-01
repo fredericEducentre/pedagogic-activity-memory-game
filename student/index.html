@@ -326,8 +326,8 @@
         startFromJSON(response.configuration);
       });
     } else {
-      /* MODE AUTONOME */
-      fetch("./img.json")
+      /* MODE LOCAL */
+      fetch("./local.json")
         .then(res => res.json())
         .then(json => startFromJSON(json));
     }
