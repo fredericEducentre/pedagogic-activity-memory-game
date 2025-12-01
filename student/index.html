@@ -124,14 +124,24 @@
 
       edac.getStorage((response) => {
         console.log(response.student);
+
+        console.log("score :" + score);
+        console.log("moves :" + moves);
+
+        const email = response.student.email;
+
+        let dataForStorage = {
+          [email]: {
+            total_score: score,
+            total_moves: moves
+          }
+        };
+
+        edac.saveStorage(dataForStorage, (saveResp) => {
+          console.log(saveResp);
+        });
       });
 
-      console.log("score :" + score);
-      console.log("moves :" + moves);
-
-      eda.saveStorage(storage, (response) => {
-        console.log(response);
-      });
 
       console.log("Score envoyé à Educentre :", normalizedScore);
     }
