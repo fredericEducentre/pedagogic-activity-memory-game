@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo storage</title>
+    <script src="https://cdn.jsdelivr.net/gh/educentre-integration/libraries@latest/activity/bridge.min.js"></script>
+</head>
+<body>
+    <div>Le storage est par groupe et par activité pédagogique</div>
+    <textarea id="storage"></textarea>
+    <div>
+        <button onclick="load()">Charger le storage</button>
+    </div>
+    <div>
+        <button onclick="save()">Enregistrer le storage</button>
+    </div>
+
+    <script>
+        const eda = new EducentreActivity();
+
+        function load() {
+            eda.getStorage((storage) => {
+                console.log(storage);
+                const storageToDisplay = JSON.stringify(storage); // storage is an object
+                document.querySelector('#storage').value = storageToDisplay;
+
+            });
+        }
+
+        function save() {
+            const storageToDisplay = document.querySelector('#storage').value;
+            const storage = JSON.parse(storageToDisplay); // storage to save must be an object
+            eda.saveStorage(storage, (response) => {
+                console.log(response);
+            });
+        }
+
+    </script>
+</body>
+</html>

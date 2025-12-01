@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo storage</title>
+    <script src="https://cdn.jsdelivr.net/gh/educentre-integration/libraries@latest/activity/bridge.min.js"></script>
+</head>
+<body>
+    <div>Le configuration est par activité pédagogique (le même pour tous les groupes)</div>
+    <textarea id="configuration"></textarea>
+    <div>
+        <button onclick="load()">Charger la configuration</button>
+    </div>
+    <div>
+        <button onclick="save()">Enregistrer le configuration</button>
+    </div>
+
+    <script>
+        const eda = new EducentreActivity();
+
+        function load() {
+            eda.getConfiguration((configuration) => {
+                console.log(configuration);
+                const configurationToDisplay = JSON.stringify(configuration); // configuration is an object
+                document.querySelector('#configuration').value = configurationToDisplay;
+
+            });
+        }
+
+        function save() {
+            const configurationToDisplay = document.querySelector('#configuration').value;
+            const configuration = JSON.parse(configurationToDisplay); // configuration to save must be an object
+            eda.saveConfiguration(configuration, (response) => {
+                console.log(response);
+            });
+        }
+
+    </script>
+</body>
+</html>
