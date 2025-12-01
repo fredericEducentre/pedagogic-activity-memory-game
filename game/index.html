@@ -307,6 +307,8 @@
     if (isEducenteActive) {
       edac.getStorage((response) => {
         console.log(response.configuration);
+        let data = response.configuration.json();
+        startFromJSON(data);
       });
     } else {
       /* MODE AUTONOME */
