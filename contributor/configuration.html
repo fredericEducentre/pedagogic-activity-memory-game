@@ -1,20 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo storage</title>
     <script src="https://cdn.jsdelivr.net/gh/educentre-integration/libraries@latest/activity/bridge.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        #configuration {
+            width: 100%;
+            height: 300px;
+            margin-top: 10px;
+        }
+        .info-box {
+            background: #f0f6ff;
+            border-left: 4px solid #2a6ee8;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        pre {
+            background: #eee;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
+
     <h1>Configuration</h1>
-    <div>Le configuration est par activité pédagogique (le même pour tous les groupes)</div>
+    <div>La configuration est commune pour toute l’activité pédagogique (identique pour tous les groupes).</div>
+
+    <div class="info-box">
+        <h2>📝 Instructions pour le formateur</h2>
+        <p>
+            Pour que le jeu de memory fonctionne correctement, vous devez entrer un ensemble de données au format
+            <strong>JSON</strong>.  
+            Chaque carte du memory doit être décrite sous la forme d’un objet contenant :
+        </p>
+
+        <ul>
+            <li><strong>id</strong> : un identifiant unique (nombre)</li>
+            <li><strong>img</strong> : l’URL de l’image qui apparaîtra sur la carte</li>
+            <li><strong>question</strong> : la question associée à l’image</li>
+            <li><strong>answer</strong> : la bonne réponse, affichée lors de la validation</li>
+        </ul>
+
+        <p>Vous devez entrer une liste d’objets, par exemple :</p>
+
+        <pre>{
+  "cards": [
+    {
+      "id": 1,
+      "img": "https://exemple.com/image1.jpg",
+      "question": "Quel animal est représenté ?",
+      "answer": "Le lion"
+    },
+    {
+      "id": 2,
+      "img": "https://exemple.com/image2.jpg",
+      "question": "Quel animal vit dans l’océan ?",
+      "answer": "Le dauphin"
+    }
+  ]
+}</pre>
+
+        <p>
+            ⚠️ Assurez-vous que les données saisies sont bien un JSON valide :  
+            – les guillemets doivent être droits (<code>" "</code>)  
+            – la virgule est requise entre les éléments  
+            – la structure doit commencer par <code>{</code> et se terminer par <code>}</code>
+        </p>
+    </div>
+
+    <h3>Saisissez ici votre configuration JSON :</h3>
     <textarea id="configuration"></textarea>
+
     <div>
         <button onclick="load()">Charger la configuration</button>
     </div>
     <div>
-        <button onclick="save()">Enregistrer le configuration</button>
+        <button onclick="save()">Enregistrer la configuration</button>
     </div>
 
     <script>
@@ -23,20 +93,24 @@
         function load() {
             eda.getConfiguration((configuration) => {
                 console.log(configuration);
-                const configurationToDisplay = JSON.stringify(configuration); // configuration is an object
+                const configurationToDisplay = JSON.stringify(configuration, null, 2);
                 document.querySelector('#configuration').value = configurationToDisplay;
-
             });
         }
 
         function save() {
-            const configurationToDisplay = document.querySelector('#configuration').value;
-            const configuration = JSON.parse(configurationToDisplay); // configuration to save must be an object
-            eda.saveConfiguration(configuration, (response) => {
-                console.log(response);
-            });
+            try {
+                const configurationToDisplay = document.querySelector('#configuration').value;
+                const configuration = JSON.parse(configurationToDisplay);
+                eda.saveConfiguration(configuration, (response) => {
+                    console.log(response);
+                    alert("Configuration enregistrée avec succès !");
+                });
+            } catch (e) {
+                alert("❌ Le format JSON est invalide. Veuillez vérifier votre saisie.");
+            }
         }
-
     </script>
+
 </body>
 </html>
