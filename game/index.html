@@ -305,28 +305,9 @@
     }
 
     if (isEducenteActive) {
-
-      edac.getStorage((resp) => {
-        if (resp && resp.certificationStorage) {
-          console.log("Dataset Educentre (storage) chargé ✔");
-          startFromJSON(resp.certificationStorage);
-        } else {
-          console.warn("Aucun storage présent → fallback configuration");
-
-          edac.getConfiguration((config) => {
-            if (config) {
-              console.log("Configuration Educentre chargée ✔");
-              startFromJSON(config);
-            } else {
-              console.warn("Aucune configuration → fallback local");
-              fetch("./img.json")
-                .then(res => res.json())
-                .then(json => startFromJSON(json));
-            }
-          });
-        }
+      edac.getStorage((response) => {
+        console.log(response);
       });
-
     } else {
       /* MODE AUTONOME */
       fetch("./img.json")
