@@ -53,21 +53,21 @@
         <p>Vous devez entrer une liste d’objets, par exemple :</p>
 
         <pre>{
-  "cards": [
-    {
-      "id": 1,
-      "img": "https://exemple.com/image1.jpg",
-      "question": "Quel animal est représenté ?",
-      "answer": "Le lion"
-    },
-    {
-      "id": 2,
-      "img": "https://exemple.com/image2.jpg",
-      "question": "Quel animal vit dans l’océan ?",
-      "answer": "Le dauphin"
-    }
-  ]
-}</pre>
+            "cards": [
+                {
+                "id": 1,
+                "img": "https://exemple.com/image1.jpg",
+                "question": "Quel animal est représenté ?",
+                "answer": "Le lion"
+                },
+                {
+                "id": 2,
+                "img": "https://exemple.com/image2.jpg",
+                "question": "Quel animal vit dans l’océan ?",
+                "answer": "Le dauphin"
+                }
+            ]
+        }</pre>
 
         <p>
             ⚠️ Assurez-vous que les données saisies sont bien un JSON valide :  
@@ -75,6 +75,80 @@
             – la virgule est requise entre les éléments  
             – la structure doit commencer par <code>{</code> et se terminer par <code>}</code>
         </p>
+
+        <h2>📦 Types de configurations possibles</h2>
+
+        <p>L’application accepte plusieurs formats de cartes. Le mode utilisé est déterminé automatiquement selon les champs fournis dans chaque objet JSON.</p>
+
+        <h3>✅ Cas 1 — Image + Question/Réponse (mode pédagogique visuel)</h3>
+        <p><strong>Format :</strong></p>
+        <pre>{
+        "id": 1,
+        "img": "https://cdn.leonardo.ai/...giraffe.jpg",
+        "question": "Quel animal a un très long cou ?",
+        "answer": "La girafe"
+        }</pre>
+
+        <p><strong>Résultat :</strong></p>
+        <ul>
+        <li>Carte A = image + question</li>
+        <li>Carte B = image + réponse</li>
+        </ul>
+
+        <hr>
+
+        <h3>✅ Cas 2 — Image seule</h3>
+        <p><strong>Format :</strong></p>
+        <pre>{
+        "id": 2,
+        "img": "https://cdn.leonardo.ai/...lion.jpg"
+        }</pre>
+
+        <p><strong>Résultat :</strong></p>
+        <ul>
+        <li>Deux cartes identiques contenant uniquement l'image</li>
+        </ul>
+
+        <hr>
+
+        <h3>✅ Cas 3 — Question / Réponse (sans image)</h3>
+        <p><strong>Format :</strong></p>
+        <pre>{
+        "id": 3,
+        "question": "2 + 2 ?",
+        "answer": "4"
+        }</pre>
+
+        <p><strong>Résultat :</strong></p>
+        <ul>
+        <li>Carte A = question</li>
+        <li>Carte B = réponse</li>
+        </ul>
+
+        <hr>
+
+        <h2>🧠 Détection automatique des modes</h2>
+        <p>Le script de l'application détecte automatiquement le mode à utiliser :</p>
+
+        <table border="1" cellpadding="6" style="border-collapse: collapse;">
+        <tr>
+            <th>Champs présents dans l’objet JSON</th>
+            <th>Mode activé</th>
+        </tr>
+        <tr>
+            <td><code>img</code> + <code>question</code> + <code>answer</code></td>
+            <td>Cas 1 — Image + Q/R</td>
+        </tr>
+        <tr>
+            <td><code>img</code> seul</td>
+            <td>Cas 2 — Image seule</td>
+        </tr>
+        <tr>
+            <td><code>question</code> + <code>answer</code> (sans <code>img</code>)</td>
+            <td>Cas 3 — Q/R sans image</td>
+        </tr>
+        </table>
+
     </div>
 
     <h3>Saisissez ici votre configuration JSON :</h3>
