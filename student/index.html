@@ -122,9 +122,15 @@
 
       const normalizedScore = matchedPairs / totalPairs;
 
-      // sendScore nécessite OBLIGATOIREMENT un callback :
-      edac.sendScore(normalizedScore, (resp) => {
-        console.log("Réponse Educentre (score) :", resp);
+      edac.getStorage((response) => {
+        console.log(response.student);
+      });
+
+      console.log("score :" + score);
+      console.log("moves :" + moves);
+
+      eda.saveStorage(storage, (response) => {
+        console.log(response);
       });
 
       console.log("Score envoyé à Educentre :", normalizedScore);
