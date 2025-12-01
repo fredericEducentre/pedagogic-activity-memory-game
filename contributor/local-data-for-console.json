@@ -1,0 +1,32 @@
+[
+  {
+    "eleve1@gmail.com": {
+      "total_score": 80,
+      "total_moves": 20
+    }
+  },
+  {
+    "eleve2@gmail.com": {
+      "total_score": 80,
+      "total_moves": 10
+    }
+  },
+  {
+    "eleve3@gmail.com": {
+      "total_score": 60,
+      "total_moves": 18
+    }
+  },
+  {
+    "eleve4@gmail.com": {
+      "total_score": 100,
+      "total_moves": 12
+    }
+  },
+  {
+    "eleve5@gmail.com": {
+      "total_score": 40,
+      "total_moves": 25
+    }
+  }
+]
